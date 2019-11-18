@@ -1,0 +1,23 @@
+c_comp=gcc
+cpp_comp=g++
+c_args=-O3 -c
+cpp_args=--std=c++17 -c -O3
+include_path=include/
+target=iri_api
+objects=main.o IRI_API_get_send.o read_IRI_JSON.o ya_getop.o
+curl_path=-lcurl
+
+${target}: ${objects}
+	${cpp_comp} ${objects} ${curl_path} -o ${target}
+
+%.o: %.cpp ${include_path}
+	${cpp_comp} ${cpp_args} $< -I ${include_path} -o $@
+
+ya_getop.o: ya_getopt.c ${include_path}
+	${c_comp} ${c_args} $< -I ${include_path} -o $@
+
+CLEAN: 
+	rm -rf ${objects}
+	rm -rf ${target}
+
+ALL: ${target}
